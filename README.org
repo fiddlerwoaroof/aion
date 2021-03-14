@@ -1,0 +1,5 @@
+* Introduction
+
+A simple parser for generating a stream of events from an icalendar
+file (<https://icalendar.org>) and some simple tools to support
+generating various sorts of output from such a file.
