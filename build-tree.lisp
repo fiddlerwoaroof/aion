@@ -1,0 +1,20 @@
+(in-package :aion.build-tree)
+
+(fw.lu:defclass+ build-tree ()
+  ((%history :accessor history :initform ())))
+
+(defmethod handle-begin ((client build-tree) block)
+  (push (list block) (history client)))
+(defmethod handle-end ((client build-tree) block)
+  (progn (when (cdr (history client))
+           (let ((last (pop (history client))))
+             (push (nreverse last)
+                   (car (history client)))))))
+(defmethod handle-property ((client build-tree) tag params content)
+  (push (list tag params content)
+        (car (history client))))
+
+(defun ics->tree (data)
+  (let ((client (build-tree)))
+    (process-ics client data)
+    (nreverse (car (history client)))))
