@@ -27,16 +27,23 @@
                                                     (substitute #\- #\_
                                                                 (string it)))
                                                   (lines client))))
-                                     '(:X_APPLE_TRAVEL_ADVISORY_BEHAVIOR
-                                       :VEVENT :VALARM :RECURRENCE_ID
-                                       :ORGANIZER :LAST_MODIFIED
-                                       :EXDATE :CREATED :ATTENDEE
-                                       :ATTENDEE :ATTACH :CATEGORIES
-                                       :DESCRIPTION :DTEND :DTSTAMP
-                                       :DTSTART :GEO :LOCATION :RRULE
-                                       :SEQUENCE :STATUS :SUMMARY
-                                       :TRANSP :UID :URL
-                                       :X_ALT_DESC)))))
+                                     '(:GEO :UID :URL :TZID :CLASS
+                                       :DTEND :RRULE :ACTION :ATTACH
+                                       :EXDATE :METHOD :PRODID :STATUS
+                                       :TRANSP :TZNAME :VALARM :VEVENT
+                                       :CREATED :DTSTAMP :DTSTART
+                                       :SUMMARY :TRIGGER :VERSION
+                                       :ATTENDEE :CALSCALE :LOCATION
+                                       :SEQUENCE :ORGANIZER
+                                       :CATEGORIES :TZOFFSETTO
+                                       :X_ALT_DESC :DESCRIPTION
+                                       :ACKNOWLEDGED :TZOFFSETFROM
+                                       :X_WR_CALDESC :X_WR_CALNAME
+                                       :LAST_MODIFIED :RECURRENCE_ID
+                                       :X_WR_ALARMUID :X_WR_TIMEZONE
+                                       :X_LIC_LOCATION
+                                       :X_APPLE_DEFAULT_ALARM
+                                       :X_APPLE_TRAVEL_ADVISORY_BEHAVIOR)))))
     (multiple-value-bind (query params)
         (sxql:yield
          (sxql:insert-into :vevent
@@ -148,6 +155,19 @@
 
 (defun setup-sql ()
   (sxql:yield
+   (sxql:make-statement
+    :create-table '(:vevent :if-not-exists t)
+    (mapcar (lambda (it)
+              (sxql.clause:make-column-definition-clause it :type 'text))
+            '(:GEO :UID :URL :TZID :CLASS :DTEND :RRULE :ACTION :ATTACH :EXDATE :METHOD
+              :PRODID :STATUS :TRANSP :TZNAME :VALARM :VEVENT :CREATED :DTSTAMP :DTSTART
+              :SUMMARY :TRIGGER :VERSION :ATTENDEE :CALSCALE :LOCATION :SEQUENCE :ORGANIZER
+              :CATEGORIES :TZOFFSETTO :X_ALT_DESC :DESCRIPTION :ACKNOWLEDGED :TZOFFSETFROM
+              :X_WR_CALDESC :X_WR_CALNAME :LAST_MODIFIED :RECURRENCE_ID :X_WR_ALARMUID
+              :X_WR_TIMEZONE :X_LIC_LOCATION :X_APPLE_DEFAULT_ALARM
+              :X_APPLE_TRAVEL_ADVISORY_BEHAVIOR))
+    (sxql:primary-key '(:sequence :uid :recurrence_id)))
+   #+(or)
    (sxql:create-table (:vevent :if-not-exists t)
        ((:ATTACH :type 'text)
         (:ATTENDEE :type 'text)

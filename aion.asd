@@ -8,7 +8,8 @@
   :depends-on (:alexandria
                :uiop
                :serapeum
-               :fwoar-lisputils)
+               :fwoar-lisputils
+               :data-lens)
   :serial t
   :components ((:file "packages")
                (:file "parser")

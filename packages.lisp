@@ -7,7 +7,8 @@
   (:use :cl)
   (:export #:handle-begin
            #:handle-end
-           #:handle-property))
+           #:handle-property
+           #:process-ics))
 
 (defpackage :aion.build-tree
   (:use :cl)
